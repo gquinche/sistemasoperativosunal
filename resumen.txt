@@ -1,0 +1,47 @@
+- Tipos de sistema operativos
+    - SO Monoliticos→sistemas donde todo esta integrado, tienden a ser más eficientes y rápidos de códificar, sin embargo son más propensos a fallos, diferencian tajantemente entre lógica de apicación y la interna del sistema
+    - SO por capas→generalmente con 5 o 6 capas dan acceso a ciertas capacidades a las aplicaciones corriendo en cada una de las capas como manejo de scheduling, memoria, y evita que las capas superiores accedan a esto ya que generalemente no lo necesitan, es más seguro y estable, sin embargo tienden a sser mucho más complejo de programar y consumir recursos
+    - SO de microkernel→hibrido entre Capas y monolítico, intenta resguardar las partes fundamentales del SO y ejecutar el resto de aplicaciones como servicios.
+    - SO estilo servidor→da servicio a clientes como un servidor, permitiendo el acceso solo a los componentes necesarios, generalmente requieren hardware especial, ademas de software especializado, tiende a ser estable
+    - 
+- 
+- Microkernel
+    - Fue un paradigma enfocado en hacer lo más pequeño posible el nucleo del sistema, podriamos rastrear sus origenes incluso a unix, donde se intento aligerar complemetamente el pesado multics a un nucleo que manejara solo lo estrictamente necesario.
+    - Hoy día se ver reflejado principalemente en distribuciones de linux enfocadas en el rendimiento y la compacidad.
+    - aquí dividimos principalmente en dos categorías las tareas, las que interactúan con el hardware directamente, y las que solo ejecutan código 
+    - algunos problemas del microkernel estan relacionados al manejo de memoria, código corrector de errores o el uso completo de la misma no es posible sin aumentar mucho más la complejidad del sistema
+    - El microkernel sin embargo es muy seguro 🔐 facilita la ejecución de pruebas y detección de fallas, puede llegar a ser logrado en solo 4000 lineas de código
+    - 
+- Sistemas operativos
+- La historia de los sistemas operativos ha sido algo ya discutido en este repositorio relacionado a la necesidad de aprovechar mejor las maquinas que cada vez eran más potentes mientras estabamos limitados por sistemas como las tarjetas perforadas la impresión o la universalidad inexistente de manejo de dispositivos como pantallas o perifericos.
+- también debido al nacimiento empresarial, educativo de los sistemas operativos habrían una gran investigación de como aprovechar el multinucleo, de como permitir al procesador cambiar fluidamente entre tareas y también como manejar multiples usuarios.
+- Se resaltan dos paradigmas de ejecución del SO→Asimetrico y simetrico →en una se limita a un cpu el SO, mientras en otras se distribuye
+- restricciones  básicas de SO a programas→evitar halting y que usen memoria que no les fue asignada
+- Concepto de anillos en el SO→una forma en que el so esta detrás de cuerdas pendiente de la ejecución de los programas
+- Arquitectura→relacionado a la forma y estructura escogida para administrar un computador
+- Tres arquetipos de programas de linux monolitico
+    - Llamadas a sistema
+    - Administradores
+    - Drivers
+- Ventajas SO monolitos→facilidad de comunicación entre componentes
+- Desventaja SO monolitos→muy propenso a errores, modificación de archivo o fallas que no pueden ser manejadas eficazmente
+- 
+- Con la velocidad de ipc actual es posible que los microkernel alcancen la velocidad de los monolitos
+- No solo apple tuvo que comprar SO→Microsoft compraba IBM DOS
+- Desde Windows 1 había multitarea y posibilidad dos ventanas→inspirados por intel i386
+- por que ignoramos windows 2000→por falta de configuración de permisos era muy fácil comprometer sistemas
+- Nacimiento de linux→inicios de 90s no enfocado en PC
+- PC→personal computer
+- Curiosidad manejo de memoria  como disco duro→por las abstracciones se le veía al sata como una posible memoria, esta podía asistir a la RAM volatil
+- 
+- SCSI→alternativa a ide que daba más rendimiento
+- Donde se encontraba SCSI→en workstations, servidores o computadores de alto rendimiento
+- SCSI conectaba a discos duros→podía implementar discos duros con hasta 10000rpm
+- Terminator de scsi→para un adaptador sin cable marcaba el fin de una cadena de dispositivos
+- cambio de paralelismo a serial→por dificulta de sincronizar envíos paralelos cada vez más rápido se migro a la serialización
+- Linux probablemente fue el primero en lograr hot swapping, al tener un enfoque fuerte en abstracción
+- 
+- GPT y msdos son controllers de particiones 
+- Partición→distribución y organización de memoria
+- VFS→una forma en el que SO se encarga de organizar los archivos virtualmente
+- tabla de montaje linux→indica como montar particiones a directorios virtuales
