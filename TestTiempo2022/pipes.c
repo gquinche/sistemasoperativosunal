@@ -5,6 +5,7 @@
 #include <sys/wait.h>
 #include <stdlib.h>
 #define PIPELIMIT 16
+#define ONEPASS 1
 
 
 
@@ -34,59 +35,47 @@ int main(int argc, char ** argv){
     int fdread = fdpipe[0];
     int fdwrite = fdpipe[1];
 
-    pid=fork();
+      pid=fork();
     if(pid<0) myError("error forking");
 
-    if(pid==0) //server
+    if(pid==0) 
     {
+        //server/writer
         close(fdread);
         FILE * f =fopen("myTest","r");
         fseek(f, 0, SEEK_END);
-        long fsize = memToUse;
+        if(ftell(f)<memToUse); myError("more data asked than availabable")
         fseek(f, 0, SEEK_SET);  
 
+        char *data = (char *) malloc(memToUse + 1);   //sizeof not need for char
+        data[memToUse] = '\0';
 
-        char *data = (char *) malloc(fsize + 1);   //sizeof not need for char
-        // data[fsize] = '\0';
-        // printf("prev%s",data);
-        // char * stream= (char *)malloc(PIPELIMIT+1);
-        // stream[PIPELIMIT]='\0';
         
-        fread(data, fsize, 1, f); //move to RAM
+        fread(data, memToUse, ONEPASS, f); //move to RAM
         fclose(f); //we finished reading close
-        // printf("after%s",data);
-        for(int i=0;i<fsize;i++)putchar(data[i]);
 
-        FILE * pipefile;
-        pipefile= fdopen(fdwrite,"w");
+        // for(int i=0;i<memToUse;i++)putchar(data[i]); //to display even if nulls
+
         int counter = 100;
         int k = 0;
-        while(fsize-k>0){
+        while(memToUse>k){
 
-            // printf("%d ",fsize-k);
-            
-            r=write(fdwrite,data+k,10);
-            // printf("\n %d \n",(r));
+            r=write(fdwrite,data+k,PIPELIMIT);
             if(r<0) myError("error sending data");
             k=k+r;
     
         }
-        // free(stream);
         free(data);
         close(fdwrite);
-        fclose(pipefile);
     }
-    else{ //reader
-        // wait(pid);
+    else
+    {   //client/reader
         close(fdwrite);
-        FILE * pipefile;
         int c;
         char buffer[10];
-        pipefile = fdopen(fdread, "r");
-        while(0!=read(fdread,buffer,10)) printf("%s",buffer); 
+        while(read(fdread,buffer,PIPELIMIT)!=0) printf("%s",buffer); 
         //read here is non blocking but we can detect there was no change
         close(fdread);
-        fclose(pipefile);
     }
 
     
