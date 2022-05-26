@@ -4,6 +4,10 @@ all: server.c client.c
 	gcc pipes.c -o pipes
 	gcc fileShare.c -o fileShare
 	gcc shmem.c -o shmem
+	chmod +rwx bashScript.sh 
+	chmod +rwx bashAll.sh 
+	bash bashScript.sh
+	bash bashAll.sh
 	
 100server: 
 	gcc server.c -o server

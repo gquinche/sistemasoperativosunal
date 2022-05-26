@@ -1,5 +1,8 @@
-for size in 1 10 100 1000 
-do
+for size in 1000 10000 100000 1000000 10000000 100000000
+do  
+        echo "" 
+        echo " SOCKETS with size $size bytes"
+        echo ""
     ./server $size & 
     if [ $size -lt 101 ] 
     then 
