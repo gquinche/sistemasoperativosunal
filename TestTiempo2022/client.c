@@ -53,6 +53,7 @@ int main(int argc,char ** argv){
     char * stream = (char *)malloc(UDPLIMIT+1);
     stream[UDPLIMIT] = '\0';
 
+
     //recieve size of comunication
     r = recv(fdcl,stream,UDPLIMIT,FLAGS);
     if(r<0) myError("error recibiendo");

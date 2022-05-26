@@ -4,7 +4,7 @@
 #include <fcntl.h> 
 #include <sys/wait.h>
 #include <stdlib.h>
-#define PIPELIMIT 16
+#define PIPELIMIT 10
 #define ONEPASS 1
 
 
@@ -44,7 +44,7 @@ int main(int argc, char ** argv){
         close(fdread);
         FILE * f =fopen("myTest","r");
         fseek(f, 0, SEEK_END);
-        if(ftell(f)<memToUse); myError("more data asked than availabable")
+        if(ftell(f)<memToUse) myError("more data asked than availabable, not");
         fseek(f, 0, SEEK_SET);  
 
         char *data = (char *) malloc(memToUse + 1);   //sizeof not need for char

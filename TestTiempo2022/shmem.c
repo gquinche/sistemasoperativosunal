@@ -1,17 +1,15 @@
-//for shared mem
-#include <sys/ipc.h>
+#include <sys/ipc.h> //for shared mem
 #include <sys/shm.h>
-//for fork
-#include <sys/types.h>
+#include <sys/types.h> //for fork
 #include <unistd.h>
-//for fread,open,putchar... 
-#include <stdio.h>
-//for wait
-#include <sys/wait.h>
+#include <stdio.h> //for fread,open,putchar... 
+#include <sys/wait.h> //for wait
+#include <stdlib.h> // for exit
 
-#define FLAGS 0
+#define FLAGS 0666
 #define ONEPASS 1
-
+#define KEY 1234 //didn't work
+#define ABSMEM NULL
 
 void myError(char * message){
     perror(message);
@@ -24,14 +22,13 @@ int main(int argc, char ** argv){
     int fdsm;
     char * ap;
     long memToUse;
-    if(argc>1) memToUse =argv[1];
-    else memToUse =100;
-    fdsm=shmget("1234",memToUse,FLAGS);
+    if(argc>1) memToUse =atoi(argv[1]);
+    else memToUse = 100;    fdsm=shmget(IPC_PRIVATE,memToUse+1,FLAGS);
     if(fdsm<0) myError("couldn't allocate memory from kernel");
 
-    ap=shmat(fdsm,NULL,FLAGS);
+    ap=(char *) shmat(fdsm,ABSMEM,FLAGS); //null for not es
 
-    pid=fork();
+    int pid=fork();
     if(pid<0) myError("error forking");
 
     if(pid==0) 
@@ -39,11 +36,14 @@ int main(int argc, char ** argv){
         //server/writer
         FILE * f =fopen("myTest","r");
         fseek(f, 0, SEEK_END);
-        if(ftell(f)<memToUse); myError("more data asked than availabable")
+        // printf("%ld\n",ftell(f));
+        // printf("%ld\n",memToUse);
+        // printf("difference was%ld",ftell(f) - memToUse);
+        if(ftell(f) < memToUse) myError("\nmore data asked than availabable. not");
         fseek(f, 0, SEEK_SET);  
 
         // char *data = (char *) malloc(memToUse + 1);   //sizeof not need for char
-        data[memToUse] = '\0';
+        ap[memToUse] = '\0';
 
         
         fread(ap, memToUse, ONEPASS, f); //move to RAM
@@ -51,7 +51,6 @@ int main(int argc, char ** argv){
 
         // for(int i=0;i<memToUse;i++)putchar(data[i]); //to display even if nulls
 
-        free(ap);
     }   
     else
     {   
@@ -61,13 +60,11 @@ int main(int argc, char ** argv){
         if(waitResponse<0) myError("error exiting writter");
 
         char buffer[10];
-        for(int =k;k<memToUse;k++) putchar(ap[k]);
-        while(read(fdread,buffer,PIPELIMIT)!=0) printf("%s",buffer);
+        for(int k=0;k<memToUse;k++) putchar(ap[k]);
         //read here is non blocking but we can detect there was no change
-        close(fdread);
     }
         close(fdsm) ;
-        free(ap);
+        shmdt(ap);
 
     
 
